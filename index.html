@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JRC Residence Boarding House</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: transparent;
+            padding: 0.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        header.scrolled {
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0% 4%;
+            padding: 0 0rem;
+            position: relative;
+        }
+
+        .nav-links {
+            position: absolute;
+            right: 0;
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ccc;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23404040" width="1200" height="600"/><text x="600" y="300" text-anchor="middle" fill="%23666" font-size="24" font-family="Arial">Boarding House Image</text></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .cta-button {
+            background-color: white;
+            color: #2d2d2d;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background-color: #3a3a3a;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+        }
+
+        .feature-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        .rooms {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .room-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .room-slide.active {
+            opacity: 1;
+        }
+
+        .room-slide:nth-child(1) {
+            background: linear-gradient(to right, #2d2d2d 0%, #2d2d2d 25%, rgba(45,45,45,0.6) 30%, rgba(45,45,45,0.2) 100%), 
+                        radial-gradient(ellipse at center, rgba(45,45,45,0) 30%, rgba(45,45,45,0.4) 70%, rgba(45,45,45,0.8) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23228B22;stop-opacity:1" /><stop offset="100%" style="stop-color:%234169E1;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23grad)" width="1200" height="800"/><circle cx="300" cy="200" r="80" fill="%23FFD700" opacity="0.8"/><rect x="100" y="600" width="200" height="150" fill="%2332CD32" opacity="0.6"/><circle cx="800" cy="300" r="50" fill="%23FF69B4" opacity="0.7"/><rect x="600" y="500" width="400" height="100" fill="%2387CEEB" opacity="0.5"/></svg>');
+            background-position: 0 0, center, 100% 0;
+            background-size: 100% 100%, 100% 100%, 75% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .room-slide:nth-child(2) {
+            background: linear-gradient(to right, #2d2d2d 0%, #2d2d2d 25%, rgba(45,45,45,0.6) 30%, rgba(45,45,45,0.2) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23E6E6FA;stop-opacity:1" /><stop offset="100%" style="stop-color:%234682B4;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23grad2)" width="1200" height="800"/><rect x="200" y="200" width="400" height="300" fill="white" opacity="0.9" rx="20"/><rect x="250" y="250" width="100" height="100" fill="%234169E1" opacity="0.7" rx="10"/><rect x="400" y="250" width="100" height="100" fill="%2332CD32" opacity="0.7" rx="10"/><rect x="250" y="380" width="250" height="80" fill="%23FFD700" opacity="0.6" rx="40"/></svg>');
+            background-position: 0 0, 100% 0;
+            background-size: 100% 100%, 75% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .room-slide:nth-child(3) {
+            background: linear-gradient(to right, #2d2d2d 0%, #2d2d2d 25%, rgba(45,45,45,0.6) 30%, rgba(45,45,45,0.2) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23DDA0DD;stop-opacity:1" /><stop offset="100%" style="stop-color:%236A5ACD;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23grad3)" width="1200" height="800"/><rect x="300" y="300" width="500" height="200" fill="%23F5F5DC" opacity="0.9" rx="10"/><rect x="320" y="350" width="460" height="100" fill="%23CD853F" opacity="0.8" rx="5"/><circle cx="150" cy="150" r="60" fill="%23FFD700" opacity="0.7"/><rect x="850" y="100" width="80" height="150" fill="%238B4513" opacity="0.8"/></svg>');
+            background-position: 0 0, 100% 0;
+            background-size: 100% 100%, 75% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .room-slide:nth-child(4) {
+            background: linear-gradient(to right, #2d2d2d 0%, #2d2d2d 25%, rgba(45,45,45,0.6) 30%, rgba(45,45,45,0.2) 100%), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23FF6347;stop-opacity:1" /><stop offset="100%" style="stop-color:%23FF4500;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23grad4)" width="1200" height="800"/><rect x="200" y="200" width="700" height="400" fill="%23F5F5F5" opacity="0.9" rx="15"/><rect x="250" y="250" width="120" height="100" fill="%23696969" opacity="0.8" rx="5"/><rect x="400" y="250" width="120" height="100" fill="%23696969" opacity="0.8" rx="5"/><rect x="550" y="250" width="120" height="100" fill="%23696969" opacity="0.8" rx="5"/><rect x="300" y="450" width="300" height="80" fill="%23D2691E" opacity="0.7" rx="10"/></svg>');
+            background-position: 0 0, 100% 0;
+            background-size: 100% 100%, 75% 100%;
+            background-repeat: no-repeat;
+        }
+
+        /* Image slide structure */
+        .deslide-cover-img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 75%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .film-poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .deslide-cover-img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(to bottom, rgba(45,45,45,1) 0%, rgba(45,45,45,0) 15%, rgba(45,45,45, 0) 25%, rgba(45,45,45,0) 50%, rgba(45,45,45,0) 65%, rgba(45,45,45,0) 80%, rgba(45,45,45,0) 100%),
+                linear-gradient(to top, rgba(45,45,45,1) 0%, rgba(45,45,45,0) 15%, rgba(45,45,45, 0) 25%, rgba(45,45,45,0) 50%, rgba(45,45,45,0) 65%, rgba(45,45,45,0) 80%, rgba(45,45,45,0) 100%),
+                linear-gradient(to right, rgba(45,45,45,1) 0%, rgba(45,45,45,0.9) 15%, rgba(45,45,45,0.8) 30%, rgba(45,45,45,0.6) 50%, rgba(45,45,45,0.4) 65%, rgba(45,45,45,0.2) 80%, rgba(45,45,45,0) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .room-content {
+            position: relative;
+            z-index: 3;
+            max-width: 600px;
+            padding: 0 60px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .room-spotlight {
+            color: #FFD700;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        .room-content h2 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .room-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .room-cta {
+            display: flex;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .cta-primary {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-primary::before {
+            content: '▶';
+            font-size: 0.8rem;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(45deg, #FFA500, #FFD700);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .room-navigation {
+            position: absolute;
+            bottom: 30px;
+            left: 60px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background-color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        .nav-arrow {
+            position: absolute;
+            right: 20px;
+            background-color: rgba(45, 45, 45, 0.8);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 9px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-arrow:hover {
+            background-color: rgba(45, 45, 45, 0.9);
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .prev-arrow {
+            bottom: 90px;
+        }
+
+        .next-arrow {
+            bottom: 30px;
+        }
+
+        .number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .room-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ccc;
+        }
+
+        /* Mobile Responsive for room slides */
+        @media (max-width: 768px) {
+            .room-content {
+                padding: 0 30px;
+                max-width: 90%;
+            }
+            
+            .room-content h2 {
+                font-size: 2.5rem;
+            }
+            
+            .room-content p {
+                font-size: 1rem;
+            }
+            
+            .room-cta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .prev-arrow {
+                right: 70px;
+            }
+            
+            .room-navigation {
+                left: 30px;
+            }
+        }
+
+        .next-arrow {
+            right: 20px;
+        }
+
+        .room-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* Mobile Responsive for room slides */
+        @media (max-width: 768px) {
+            .room-slide {
+                flex-direction: column;
+            }
+            
+            .room-text-section {
+                width: 100%;
+                height: 40%;
+            }
+            
+            .room-image-section {
+                width: 100%;
+                height: 60%;
+            }
+            
+            .room-content h2 {
+                font-size: 2rem;
+            }
+            
+            .room-content p {
+                font-size: 1rem;
+            }
+            
+            .prev-arrow {
+                left: 20px;
+            }
+            
+            .room-navigation {
+                left: 50%;
+            }
+        }
+
+        /* Contact Section */
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0rem;
+        }
+
+        .contact-info {
+            background-color: #3a3a3a;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid #555;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-icon {
+            font-size: 1.8rem;
+            margin-right: 1.5rem;
+            width: 50px;
+            height: 50px;
+            background-color: #3a3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .contact-details strong {
+            font-size: 1.1rem;
+            color: #F5F5DC;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-details span {
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        .contact-details a {
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            color: #33C3FF !important;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background-color: #3a3a3a;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2d2d2d;
+            color: white;
+            border: 2px solid #555;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: white;
+        }
+
+        .submit-btn {
+            background-color: white;
+            color: #2d2d2d;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #eee;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid #444;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            /* Header and Navigation */
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 1rem;
+                margin: 0 2%;
+                padding: 0 1rem;
+            }
+
+            .logo img {
+                height: 35px !important;
+            }
+
+            .nav-links {
+                position: static;
+                flex-direction: row;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            header {
+                position: fixed;
+                background-color: #1a1a1a;
+                padding: 0.8rem 0;
+            }
+
+            /* Hero Section */
+            .hero {
+                margin-top: 70px;
+                height: 80vh;
+                padding: 2rem 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .cta-button {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+
+            /* Main Content */
+            main {
+                padding: 2rem 1rem;
+            }
+
+            section {
+                margin-bottom: 3rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            /* Features */
+            .features {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1rem;
+            }
+
+            .feature-card h3 {
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .feature-card p {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+
+            /* Contact Section */
+            .contact-container {
+                padding: 1rem;
+            }
+
+            .contact-info {
+                padding: 1.5rem;
+            }
+
+            .contact-item {
+                padding: 0.8rem;
+                margin-bottom: 1.5rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .contact-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+                width: 45px;
+                height: 45px;
+            }
+
+            .contact-details strong {
+                font-size: 1rem;
+            }
+
+            .contact-details span,
+            .contact-details a {
+                font-size: 0.9rem;
+            }
+
+            /* Room Slides Mobile Enhancements */
+            .room-content {
+                padding: 0 1.5rem;
+                max-width: 95%;
+            }
+            
+            .room-content h2 {
+                font-size: 2rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+            
+            .room-content p {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                margin-bottom: 1.5rem;
+            }
+
+            .room-navigation {
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 20px;
+            }
+
+            .nav-arrow {
+                padding: 8px 14px;
+                font-size: 1rem;
+            }
+
+            .prev-arrow {
+                right: 70px;
+                bottom: 70px;
+            }
+
+            .next-arrow {
+                right: 20px;
+                bottom: 70px;
+            }
+
+            /* Footer */
+            footer {
+                padding: 1.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Small Mobile Devices */
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .room-content h2 {
+                font-size: 1.6rem;
+            }
+
+            .room-content p {
+                font-size: 0.9rem;
+            }
+
+            .contact-item {
+                padding: 0.6rem;
+            }
+
+            .feature-card {
+                padding: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="logo.png" alt="JRC Residence" style="height: 40px; width: auto;">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#rooms">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="rooms">
+        <div class="rooms">
+            <div class="room-slide active">
+                <div class="deslide-cover-img">
+                    <img class="film-poster-img lazyloaded" 
+                         data-src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop" 
+                         alt="Outside Garden Area" 
+                         src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop">
+                    <div class="deslide-cover-img-overlay"></div>
+                </div>
+                <div class="room-content">
+                    <h2>Entrance</h2>
+                    <p>Entrance area with covered space for hanging out and socializing with other residents. The entrance provides a comfortable shelter where you can relax, meet new people, and enjoy the community atmosphere of the boarding house.</p>
+                </div>
+            </div>
+            
+            <div class="room-slide">
+                <div class="deslide-cover-img">
+                    <img class="film-poster-img lazyloaded" 
+                         data-src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop" 
+                         alt="Modern Bathroom" 
+                         src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop">
+                    <div class="deslide-cover-img-overlay"></div>
+                </div>
+                <div class="room-content">
+                    <h2>Comfort Room</h2>
+                    <p>Basic bathroom facilities with 1 toilet bowl, 1 faucet, and decent space inside for personal hygiene needs. The comfort room is clean, well-maintained, and provides adequate space for daily use with proper ventilation.</p>
+                </div>
+            </div>
+            
+            <div class="room-slide">
+                <div class="deslide-cover-img">
+                    <img class="film-poster-img lazyloaded" 
+                         data-src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop" 
+                         alt="Private Bedroom" 
+                         src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop">
+                    <div class="deslide-cover-img-overlay"></div>
+                </div>
+                <div class="room-content">
+                    <h2>Bedroom</h2>
+                    <p>Comfortable sleeping quarters with quality mattress, storage space, and peaceful atmosphere for rest. Each bedroom accommodates 2-4 people with adequate lighting for a comfortable stay.</p>
+                </div>
+            </div>
+
+            <div class="room-slide">
+                <div class="deslide-cover-img">
+                    <img class="film-poster-img lazyloaded" 
+                         data-src="https://images.unsplash.com/photo-1556909114-3f1808eac57f?w=800&h=600&fit=crop" 
+                         alt="Modern Kitchen" 
+                         src="https://images.unsplash.com/photo-1556909114-3f1808eac57f?w=800&h=600&fit=crop">
+                    <div class="deslide-cover-img-overlay"></div>
+                </div>
+                <div class="room-content">
+                    <h2>Kitchen</h2>
+                    <p>Basic kitchen area with 1 sink and 1 faucet for meal preparation and cleaning. The shared kitchen provides essential facilities for washing dishes and preparing simple meals in a clean, functional space.</p>
+                </div>
+            </div>
+
+            <button class="nav-arrow prev-arrow" onclick="changeSlide(-1)">❮</button>
+            <button class="nav-arrow next-arrow" onclick="changeSlide(1)">❯</button>
+            
+            <div class="room-navigation">
+                <div class="nav-dot active" onclick="currentSlide(1)"></div>
+                <div class="nav-dot" onclick="currentSlide(2)"></div>
+                <div class="nav-dot" onclick="currentSlide(3)"></div>
+                <div class="nav-dot" onclick="currentSlide(4)"></div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section id="about">
+            <h2>Why Choose Us?</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/93/93158.png" alt="WiFi Icon" class="feature-image">
+                    </div>
+                    <h3>Free WiFi</h3>
+                    <p>High-speed internet connection available throughout the building for work, school and entertainment.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Security Icon" class="feature-image">
+                    </div>
+                    <h3>Secure</h3>
+                    <p>24/7 security with CCTV monitoring and controlled access for your safety.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Store Icon" class="feature-image">
+                    </div>
+                    <h3>Sari-Sari Store</h3>
+                    <p>Convenient sari-sari store located right beside the boarding house for easy access to daily necessities and snacks.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Location" style="width: 30px; height: 30px; object-fit: contain;">
+                        </div>
+                        <div class="contact-details">
+                            <strong>Address</strong>
+                            <span>J. Reye Street, Bitan-o, Sorsogon City</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <img src="https://cdn-icons-png.flaticon.com/512/724/724664.png" alt="Phone" style="width: 30px; height: 30px; object-fit: contain;">
+                        </div>
+                        <div class="contact-details">
+                            <strong>Phone</strong>
+                            <span>09488940936</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <img src="https://cdn-icons-png.flaticon.com/512/5968/5968534.png" alt="Gmail" style="width: 30px; height: 30px; object-fit: contain;">
+                        </div>
+                        <div class="contact-details">
+                            <strong>Email</strong>
+                            <span>chuakylejustin@gmail.com</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <img src="https://cdn.iconscout.com/icon/free/png-256/facebook-messenger-2-569346.png" alt="Facebook Messenger" style="width: 30px; height: 30px; object-fit: contain;">
+                        </div>
+                        <div class="contact-details">
+                            <strong>Messenger</strong>
+                            <a href="https://m.me/kyle.justin.chua.2025?hash=Abb3xImVFTZDN4db&source=qr_link_share" target="_blank" style="color: #00B2FF; text-decoration: none;">Click here to message me</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 JRC Residence Boarding House. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Room slider functionality
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.room-slide');
+        const dots = document.querySelectorAll('.nav-dot');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex >= slides.length) {
+                currentSlideIndex = 0;
+            } else if (currentSlideIndex < 0) {
+                currentSlideIndex = slides.length - 1;
+            }
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index - 1;
+            showSlide(currentSlideIndex);
+        }
+
+        // Auto-slide every 6 seconds
+        setInterval(() => {
+            changeSlide(1);
+        }, 6000);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeSlide(1);
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
