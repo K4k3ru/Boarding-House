@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1200, initial-scale=1, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JRC Residence Boarding House</title>
     <link rel="icon" type="image/png" href="icon.png">
     <style>
@@ -257,25 +257,17 @@
         .room-spotlight {
             color: #FFD700;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: bold;
             margin-bottom: 1rem;
             display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.9;
         }
 
         .room-content h2 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 1.5rem;
             text-align: left;
-            font-weight: 900;
-            line-height: 1;
-            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
+            font-weight: bold;
+            line-height: 1.1;
         }
 
         .room-content p {
@@ -292,53 +284,37 @@
         }
 
         .cta-primary {
-            background: linear-gradient(45deg, #FFD700, #FFA500);
+            background-color: #FFD700;
             color: #000;
-            padding: 14px 28px;
-            border-radius: 30px;
+            padding: 12px 25px;
+            border-radius: 25px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .cta-primary::before {
-            content: '▶';
-            font-size: 0.8rem;
         }
 
         .cta-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
-            background: linear-gradient(45deg, #FFA500, #FFD700);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
         .cta-secondary {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 14px 28px;
-            border-radius: 30px;
+            padding: 12px 25px;
+            border-radius: 25px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
         }
 
         .cta-secondary:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.3);
         }
 
         .room-navigation {
@@ -620,6 +596,90 @@
             background-color: #eee;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .close:hover {
+            color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            position: relative;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .location-info {
+            margin-bottom: 25px;
+        }
+
+        .location-info h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .location-info p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .location-image {
+            margin: 25px 0 0;
+            text-align: center;
+        }
+
+        .location-image img {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #444;
+        }
+
         /* Footer */
         footer {
             background-color: #1a1a1a;
@@ -895,7 +955,7 @@
                 </div>
                 <div class="room-content">
                     <h2>Bedroom</h2>
-                    <p>Comfortable sleeping quarters with quality mattress, storage space, and peaceful atmosphere for rest. The bedroom accommodates 2-4 people with adequate lighting for a comfortable stay.</p>
+                    <p>Comfortable sleeping quarters with quality mattress, storage space, and peaceful atmosphere for rest. Each bedroom accommodates 2-4 people with adequate lighting for a comfortable stay.</p>
                 </div>
             </div>
 
@@ -959,13 +1019,14 @@
             <h2>Contact Us</h2>
             <div class="contact-container">
                 <div class="contact-info">
-                    <div class="contact-item">
+                    <div class="contact-item" onclick="openDirectionsModal()" style="cursor: pointer;">
                         <div class="contact-icon">
                             <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Location" style="width: 30px; height: 30px; object-fit: contain;">
                         </div>
                         <div class="contact-details">
                             <strong>Address</strong>
                             <span>J. Reyes Street, Bitan-o, Sorsogon City</span>
+                            <small style="color: #FFD700; font-style: italic;">Click to view directions</small>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -1071,10 +1132,39 @@
                 header.classList.remove('scrolled');
             }
         });
+
+        // Modal functions for directions
+        function openDirectionsModal() {
+            document.getElementById('directionsModal').style.display = 'block';
+        }
+
+        function closeDirectionsModal() {
+            document.getElementById('directionsModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('directionsModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
+
+    <!-- Directions Modal -->
+    <div id="directionsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span class="close" onclick="closeDirectionsModal()">&times;</span>
+                <div class="location-info">
+                    <h3>JRC Residence Boarding House</h3>
+                    <p><strong>Address:</strong> J. Reyes Street, Bitan-o, Sorsogon City</p>
+                </div>
+                <div class="location-image">
+                    <img src="location.png" alt="Location Map" style="width: 100%; height: auto; border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>
-
-
-
