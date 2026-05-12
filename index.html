@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JRC Residence Boarding House</title>
+    <title>Chua's Boarding House</title>
     <link rel="icon" type="image/png" href="icon.png">
     <style>
         * {
@@ -17,6 +17,9 @@
             background-color: #2d2d2d;
             color: white;
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Header */
@@ -37,10 +40,10 @@
 
         nav {
             display: flex;
-            justify-content: space-between;
+            justify-content: first baseline;
             align-items: center;
-            max-width: 1200px;
-            margin: 0% 4%;
+            max-width: 100%;
+            margin: 0% 2%;
             padding: 0 0rem;
             position: relative;
         }
@@ -50,13 +53,20 @@
             right: 0;
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 8rem;
+            padding-right: 2rem;
+        }
+
+        .nav-links li {
+            padding: 0.5rem 0.75rem;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             transition: color 0.3s ease;
+            font-size: 1.3rem;
+            font-weight: 500;
         }
 
         .nav-links a:hover {
@@ -104,14 +114,21 @@
         }
 
         /* Main Content */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
+       
 
         section {
             margin-bottom: 4rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 4rem 2rem;
+            width: 100%;
+        }
+
+        #rooms {
+            max-width: none;
+            margin: 0;
+            padding: 0;
         }
 
         h2 {
@@ -249,8 +266,8 @@
         .room-content {
             position: relative;
             z-index: 3;
-            max-width: 600px;
-            padding: 0 60px;
+            max-width: 1000px;
+            padding: 0 0 0 60px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
@@ -522,7 +539,7 @@
             font-weight: bold;
         }
 
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 10px;
             border: none;
@@ -532,9 +549,19 @@
             border: 2px solid #555;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: white;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 40px;
         }
 
         .submit-btn {
@@ -639,9 +666,12 @@
         /* Footer */
         footer {
             background-color: #1a1a1a;
-            padding: 2rem 0;
-            text-align: center;
+            padding: 1.5rem 0;
+            text-align: center; 
             border-top: 1px solid #444;
+            font-size: 1.1rem;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Mobile Responsive */
@@ -831,7 +861,7 @@
 
             /* Footer */
             footer {
-                padding: 1.5rem 1rem;
+                padding: 0.8rem 0.8rem;
                 font-size: 0.9rem;
             }
 
@@ -1019,8 +1049,550 @@
             }
         }
 
-        /* Extra small devices (very small phones) */
-        @media (max-width: 360px) {
+        /* Receipt Maker Styles */
+        .receipt-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Password Modal Styles */
+        #passwordModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #passwordModal.show {
+            display: flex;
+        }
+
+        .password-modal-content {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            padding: 3rem;
+            border-radius: 15px;
+            border: 2px solid #FFD700;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .password-modal-content h2 {
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .password-modal-content p {
+            color: #ccc;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .password-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 5px;
+            background-color: #2d2d2d;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .password-input-group input:focus {
+            outline: none;
+            border-color: #FFD700;
+        }
+
+        .password-button-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .password-button-group button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .password-submit-btn {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        .password-submit-btn:hover {
+            background-color: #FFC700;
+            transform: translateY(-2px);
+        }
+
+        .password-cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .password-cancel-btn:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+
+        .password-error {
+            color: #f44336;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Receipt Maker Modal Styles */
+        #receiptMakerModal {
+            display: none;
+            position: fixed;
+            z-index: 2001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        #receiptMakerModal.show {
+            display: block;
+        }
+
+        .receipt-modal-content {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            margin: 2% auto;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 1000px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            animation: modalSlideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .receipt-modal-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+            z-index: 10;
+        }
+
+        .receipt-modal-header h2 {
+            color: #FFD700;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .receipt-close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .receipt-close-btn:hover {
+            color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        .receipt-modal-body {
+            padding: 2rem;
+        }
+
+        .receipt-container {
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .receipt-form-section,
+        .receipt-preview-section {
+            background-color: #3a3a3a;
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #555;
+        }
+
+        .receipt-form-section h3,
+        .receipt-preview-section h3 {
+            color: #FFD700;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .receipt-preview {
+            background-color: #2d2d2d;
+            border: 2px solid #555;
+            padding: 1.5rem;
+            border-radius: 8px;
+            min-height: 200px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            height: 720px;
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .save-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #0b7dda;
+            transform: translateY(-2px);
+        }
+
+        .clear-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .clear-btn:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+
+        .export-btn {
+            background-color: #FF9800;
+            color: white;
+        }
+
+        .export-btn:hover {
+            background-color: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        .receipt-history {
+            background-color: #2d2d2d;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #555;
+        }
+
+        .receipt-history h4 {
+            color: #FFD700;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .history-item {
+            background-color: #3a3a3a;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background-color: #444;
+            transform: translateX(5px);
+        }
+
+        .history-item-info {
+            flex: 1;
+        }
+
+        .history-item-info strong {
+            color: #FFD700;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .history-item-info small {
+            color: #ccc;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .history-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #da190b;
+        }
+
+        .download-history-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .download-history-btn:hover {
+            background-color: #45a049;
+        }
+
+        .no-receipts {
+            text-align: center;
+            color: #ccc;
+            padding: 1rem;
+        }
+
+        /* Modal for viewing full receipt */
+        .receipt-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .receipt-modal-content {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            margin: 1.5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 65%;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            animation: modalSlideIn 0.3s ease;
+            position: relative;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .receipt-modal-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .receipt-modal-body {
+            position: relative;
+            padding: 30px 15px 30px 15px;
+            color: #fff;
+        }
+
+        .receipt-modal-body pre {
+            background-color: #2d2d2d;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            max-height: 70vh;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .receipt-modal-body pre::-webkit-scrollbar {
+            display: none;
+        }
+
+        .close-receipt-modal {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            color: #fff;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1002;
+            background: none;
+            border: none;
+            padding: 5px;
+            width: auto;
+            height: auto;
+        }
+
+        .close-receipt-modal:hover {
+            color: #FFD700;
+            transform: scale(1.2);
+        }
+
+        /* Responsive receipt container */
+        @media (max-width: 100%) and (min-width: 60%) {
+            .receipt-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile Responsive Receipt Styles */
+        @media (max-width: 768px) {
+            .receipt-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .receipt-form-section,
+            .receipt-preview-section {
+                padding: 1.5rem;
+            }
+
+            .receipt-preview {
+                min-height: 250px;
+                font-size: 0.85rem;
+            }
+
+            .action-btn {
+                min-width: 120px;
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .receipt-modal-content {
+                width: 90%;
+                margin: 10% auto;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .receipt-modal-body {
+                padding: 20px;
+            }
+
+            .receipt-modal-body pre {
+                font-size: 0.8rem;
+                padding: 1rem;
+                max-height: 60vh;
+            }
+        }
+
+        /* Mobile Responsive for 480px and below */
+        @media (max-width: 480px) {
+            .receipt-container {
+                grid-template-columns: 1fr;
+            }
+
+            .receipt-form-section,
+            .receipt-preview-section {
+                padding: 1rem;
+            }
+
+            .receipt-preview {
+                min-height: 200px;
+                font-size: 0.8rem;
+            }
+
+            .action-btn {
+                min-width: 100px;
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+
+            .history-item-actions {
+                width: 100%;
+            }
+
+            .history-btn {
+                flex: 1;
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+
+            .receipt-modal-content {
+                width: 95%;
+                margin: 15% auto;
+                max-height: 75vh;
+                overflow-y: auto;
+            }
+        }
+
+        
             /* Ultra-compact typography */
             .hero-content h1 {
                 font-size: 1.5rem;
@@ -1107,8 +1679,8 @@
             .location-image img {
                 border-radius: 8px;
             }
-        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header>
@@ -1120,6 +1692,7 @@
                 <li><a href="#rooms">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="#" onclick="openReceiptPasswordModal(); return false;">Receipts</a></li>
             </ul>
         </nav>
     </header>
@@ -1262,7 +1835,7 @@
                         </div>
                         <div class="contact-details">
                             <strong>Messenger</strong>
-                            <a href="https://m.me/kyle.justin.chua.2026?hash=Abb3xImVFTZDN4db&source=qr" target="_blank" style="color: #00B2FF; text-decoration: none;">Click here to message me</a>
+                            <a href="https://m.me/kyle.justin.chua.2025?hash=Abb3xImVFTZDN4db&source=qr_link_share" target="_blank" style="color: #00B2FF; text-decoration: none;">Click here to message me</a>
                         </div>
                     </div>
                 </div>
@@ -1271,7 +1844,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 JRC Residence Boarding House. All rights reserved.</p>
+        <p>&copy; 2026 Chua's Boarding House. All rights reserved.</p>
     </footer>
 
     <script>
@@ -1357,7 +1930,599 @@
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
+            const receiptModal = document.getElementById('receiptModal');
+            if (event.target == receiptModal) {
+                receiptModal.style.display = 'none';
+            }
         }
+
+        // ==================== RECEIPT MAKER FUNCTIONALITY ====================
+        const DB_NAME = 'ReceiptMakerDB';
+        const STORE_NAME = 'receipts';
+        let currentReceiptData = null;
+        let receiptDatabase;
+
+        // Initialize IndexedDB
+        function initReceiptDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    receiptDatabase = request.result;
+                    resolve(receiptDatabase);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        store.createIndex('date', 'date', { unique: false });
+                    }
+                };
+            });
+        }
+
+        // Save receipt to IndexedDB
+        function saveReceiptToDb(receiptData) {
+            return new Promise((resolve, reject) => {
+                const transaction = receiptDatabase.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.add(receiptData);
+
+                request.onsuccess = () => {
+                    resolve(request.result);
+                    showNotification('Receipt auto-saved successfully!', 'success');
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Get all receipts from IndexedDB
+        function getAllReceipts() {
+            return new Promise((resolve, reject) => {
+                const transaction = receiptDatabase.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.getAll();
+
+                request.onsuccess = () => {
+                    resolve(request.result.reverse());
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Delete receipt from IndexedDB
+        function deleteReceiptFromDb(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = receiptDatabase.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.delete(id);
+
+                request.onsuccess = () => {
+                    resolve();
+                    loadReceiptHistory();
+                    showNotification('Receipt deleted successfully!', 'info');
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Format receipt text
+        function formatReceipt(data) {
+            const dateObj = new Date(data.paymentDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Format rent month
+            const rentMonthObj = new Date(data.rentMonth + '-01');
+            const formattedRentMonth = rentMonthObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long'
+            });
+
+            // Calculate total amount
+            const rentalAmount = parseFloat(data.rentalAmount) || 0;
+            const electricityBill = parseFloat(data.electricityBill) || 0;
+            const internetBill = parseFloat(data.internetBill) || 0;
+            const waterBill = parseFloat(data.waterBill) || 0;
+            const totalAmount = rentalAmount + electricityBill + internetBill + waterBill;
+
+            const centerText = (text) => {
+                const width = 32;
+                const totalPadding = Math.max(0, width - text.length);
+                const leftPadding = Math.floor(totalPadding / 2);
+                const rightPadding = totalPadding - leftPadding;
+                return ' '.repeat(leftPadding) + text + ' '.repeat(rightPadding);
+            };
+
+            const formatBillLine = (label, amount) => {
+                const amountText = typeof amount === 'string' ? amount : `₱ ${parseFloat(amount).toFixed(2)}`;
+                const maxLineLength = 32;
+                const labelWithDots = label + ' ' + '.'.repeat(Math.max(1, maxLineLength - label.length - amountText.length - 2)) + ' ' + amountText;
+                const totalPadding = Math.max(0, 32 - labelWithDots.length);
+                const leftPadding = Math.floor(totalPadding / 2);
+                const rightPadding = totalPadding - leftPadding;
+                return ' '.repeat(leftPadding) + labelWithDots + ' '.repeat(rightPadding);
+            };
+
+            const divider = '-'.repeat(25);
+            const equalDivider = '='.repeat(25);
+
+            return `
+
+${centerText('CHUA\'S BOARDING HOUSE')}
+${centerText('PAYMENT RECEIPT')}
+
+${divider}
+
+${centerText('PAYMENT DETAILS')}
+${centerText(`Rent Month: ${formattedRentMonth}`)}
+${centerText(`Payment Date: ${formattedDate}`)}
+${centerText(`Payment Method: ${data.paymentMethod}`)}
+
+${divider}
+
+${centerText('BILLING BREAKDOWN')}
+${formatBillLine('Rental Amount:', rentalAmount.toFixed(2))}
+${data.electricityBill ? `${formatBillLine('Electricity Bill:', electricityBill.toFixed(2))}
+` : `${formatBillLine('Electricity Bill:', 'FREE')}`}
+${data.internetBill ? `${formatBillLine('Internet Bill:', internetBill.toFixed(2))}
+` : `${formatBillLine('Internet Bill:', 'FREE')}`}
+${data.waterBill ? `${formatBillLine('Water Bill:', waterBill.toFixed(2))}
+` : `${formatBillLine('Water Bill:', 'FREE')}`}
+
+${divider}
+
+${centerText('TOTAL AMOUNT DUE')}
+${formatBillLine('TOTAL:', totalAmount.toFixed(2))}
+
+${divider}
+
+${data.remarks ? `${centerText('REMARKS')}\n${centerText(data.remarks)}\n\n${divider}\n` : ''}
+${centerText('Thank you for your payment!')}
+${centerText('Chua\'s Boarding House')}
+${centerText('J. Reyes Street, Bitan-o')}
+${centerText('Sorsogon City')}
+${centerText('Phone: 09514278564')}
+`;
+        }
+
+        // Set default values for date and month (with safety check)
+        function setDefaultFormValues() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            
+            const paymentDateEl = document.getElementById('paymentDate');
+            const rentMonthEl = document.getElementById('rentMonth');
+            
+            if (paymentDateEl) paymentDateEl.value = `${year}-${month}-${day}`;
+            if (rentMonthEl) rentMonthEl.value = `${year}-${month}`;
+        }
+
+        // Initialize form values when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setDefaultFormValues);
+        } else {
+            setDefaultFormValues();
+        }
+
+        // Generate receipt on form submit
+        const receiptFormEl = document.getElementById('receiptForm');
+        if (receiptFormEl) {
+            receiptFormEl.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                try {
+                    currentReceiptData = {
+                        rentMonth: document.getElementById('rentMonth').value,
+                        rentalAmount: document.getElementById('rentalAmount').value,
+                        electricityBill: document.getElementById('electricityBill').value,
+                        internetBill: document.getElementById('internetBill').value,
+                        waterBill: document.getElementById('waterBill').value,
+                        paymentDate: document.getElementById('paymentDate').value,
+                        paymentMethod: document.getElementById('paymentMethod').value,
+                        remarks: document.getElementById('remarks').value,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    const receiptText = formatReceipt(currentReceiptData);
+                    document.getElementById('receiptPreview').textContent = receiptText;
+
+                    // Show action buttons
+                    document.getElementById('downloadBtn').style.display = 'inline-block';
+                    document.getElementById('dualCopyBtn').style.display = 'inline-block';
+
+                    showNotification('Receipt generated! Click "Download as PDF"', 'success');
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    showNotification('Error generating receipt: ' + error.message, 'error');
+                }
+            });
+        }
+
+        // Download receipt as PDF file
+        const downloadBtnEl = document.getElementById('downloadBtn');
+        if (downloadBtnEl) {
+            downloadBtnEl.addEventListener('click', () => {
+                if (!currentReceiptData) {
+                    showNotification('Please generate a receipt first!', 'error');
+                    return;
+                }
+
+                const receiptText = formatReceipt(currentReceiptData);
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                const filename = `Receipt_${timestamp}.pdf`;
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: [80, 200]
+                });
+
+                const lines = receiptText.split('\n');
+                let yPosition = 10;
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const lineHeight = 4;
+                const fontSize = 9;
+
+                doc.setFontSize(fontSize);
+                doc.setFont('courier');
+
+                lines.forEach((line) => {
+                    if (yPosition > pageHeight - 10) {
+                        doc.addPage();
+                        yPosition = 10;
+                    }
+                    doc.text(line, 40, yPosition, { align: 'center', maxWidth: 70 });
+                    yPosition += lineHeight;
+                });
+
+                doc.save(filename);
+                showNotification('Receipt downloaded successfully as PDF!', 'success');
+            });
+        }
+
+        // Download dual copy (Boarding House + Tenant) on letter size paper - landscape
+        const dualCopyBtnEl = document.getElementById('dualCopyBtn');
+        if (dualCopyBtnEl) {
+            dualCopyBtnEl.addEventListener('click', () => {
+                if (!currentReceiptData) {
+                    showNotification('Please generate a receipt first!', 'error');
+                    return;
+                }
+
+                const receiptText = formatReceipt(currentReceiptData);
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                const filename = `Receipt_DualCopy_${timestamp}.pdf`;
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'letter'
+                });
+
+                const lines = receiptText.split('\n');
+                const lineHeight = 4;
+                const fontSize = 9;
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const columnWidth = (pageWidth - 50) / 2; // Two columns with more margins
+                const leftX = 50;
+                const rightX = pageWidth / 2 + 30;
+
+                doc.setFontSize(fontSize);
+                doc.setFont('courier');
+
+                // Function to add receipt copy to a specific column
+                const addReceiptCopy = (xPos, yStart, boxX, boxWidth) => {
+                    let yPosition = yStart;
+
+                    doc.setFontSize(fontSize);
+                    doc.setFont('courier');
+
+                    // Add receipt lines - centered in box
+                    lines.forEach((line) => {
+                        if (yPosition > pageHeight - 10) {
+                            return; // Skip if exceeds page height
+                        }
+                        doc.text(line, boxX + boxWidth / 2, yPosition, { align: 'center' });
+                        yPosition += lineHeight;
+                    });
+
+                    return yPosition;
+                };
+
+                // Calculate receipt height
+                let receiptHeight = 10;
+                lines.forEach((line) => {
+                    receiptHeight += lineHeight;
+                });
+
+                // Draw outline/border for cutting - narrow like solo receipt
+                doc.setDrawColor(0);
+                doc.setLineWidth(0.5);
+                const receiptWidth = 80; // Receipt width increased by 5cm
+                const leftReceiptX = leftX + (columnWidth - receiptWidth) / 2;
+                const rightReceiptX = rightX + (columnWidth - receiptWidth) / 2;
+
+                // Left receipt border
+                doc.rect(leftReceiptX, 5, receiptWidth, receiptHeight + 10);
+
+                // Right receipt border
+                doc.rect(rightReceiptX, 5, receiptWidth, receiptHeight + 10);
+
+                // Add both copies side-by-side with box positioning
+                addReceiptCopy(leftX, 10, leftReceiptX, receiptWidth);
+                addReceiptCopy(rightX, 10, rightReceiptX, receiptWidth);
+
+                doc.save(filename);
+                showNotification('Dual copy receipt downloaded successfully as PDF (Landscape)!', 'success');
+            });
+        }
+
+        // Auto-save receipt to database
+        const saveBtnEl = document.getElementById('saveBtn');
+        if (saveBtnEl) {
+            saveBtnEl.addEventListener('click', async () => {
+                if (!currentReceiptData) {
+                    showNotification('Please generate a receipt first!', 'error');
+                    return;
+                }
+
+                try {
+                    const receiptToSave = {
+                        ...currentReceiptData,
+                        date: new Date().toLocaleDateString(),
+                        receiptText: formatReceipt(currentReceiptData)
+                    };
+
+                    await saveReceiptToDb(receiptToSave);
+                    loadReceiptHistory();
+
+                    // Reset form
+                    document.getElementById('receiptForm').reset();
+                    document.getElementById('receiptPreview').textContent = '';
+                    document.getElementById('downloadBtn').style.display = 'none';
+                    document.getElementById('dualCopyBtn').style.display = 'none';
+                    currentReceiptData = null;
+                } catch (error) {
+                    showNotification('Error saving receipt: ' + error.message, 'error');
+                }
+            });
+        }
+
+        // Load and display receipt history
+        async function loadReceiptHistory() {
+            // History display removed
+        }
+
+        // View receipt in modal
+        window.viewReceipt = async function(id) {
+            try {
+                const transaction = receiptDatabase.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.get(id);
+
+                request.onsuccess = () => {
+                    const receipt = request.result;
+                    if (receipt) {
+                        showReceiptModal(receipt.receiptText);
+                    }
+                };
+            } catch (error) {
+                showNotification('Error viewing receipt: ' + error.message, 'error');
+            }
+        };
+
+        // Download receipt from history
+        window.downloadReceipt = async function(id) {
+            try {
+                const transaction = receiptDatabase.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.get(id);
+
+                request.onsuccess = () => {
+                    const receipt = request.result;
+                    if (receipt) {
+                        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+                        const filename = `Receipt_${timestamp}.pdf`;
+
+                        const { jsPDF } = window.jspdf;
+                        const doc = new jsPDF({
+                            orientation: 'portrait',
+                            unit: 'mm',
+                            format: [80, 200]
+                        });
+
+                        const lines = receipt.receiptText.split('\n');
+                        let yPosition = 10;
+                        const pageHeight = doc.internal.pageSize.getHeight();
+                        const lineHeight = 4;
+                        const fontSize = 9;
+
+                        doc.setFontSize(fontSize);
+                        doc.setFont('courier');
+
+                        lines.forEach((line) => {
+                            if (yPosition > pageHeight - 10) {
+                                doc.addPage();
+                                yPosition = 10;
+                            }
+                            doc.text(line, 40, yPosition, { align: 'center', maxWidth: 70 });
+                            yPosition += lineHeight;
+                        });
+
+                        doc.save(filename);
+                        showNotification('Receipt downloaded successfully as PDF!', 'success');
+                    }
+                };
+            } catch (error) {
+                showNotification('Error downloading receipt: ' + error.message, 'error');
+            }
+        };
+
+        // Delete receipt from history
+        window.deleteReceipt = async function(id) {
+            if (confirm('Are you sure you want to delete this receipt?')) {
+                await deleteReceiptFromDb(id);
+            }
+        };
+
+
+
+
+
+        // Show receipt in modal
+        function showReceiptModal(receiptText) {
+            const modal = document.getElementById('receiptModal');
+            const pre = modal.querySelector('pre');
+            pre.textContent = receiptText;
+            modal.style.display = 'block';
+        }
+
+        // Close receipt modal
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                background-color: ${
+                    type === 'success' ? '#4CAF50' :
+                    type === 'error' ? '#f44336' :
+                    '#2196F3'
+                };
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize receipt maker when page loads
+        window.addEventListener('load', async () => {
+            try {
+                await initReceiptDB();
+                loadReceiptHistory();
+            } catch (error) {
+                console.error('Error initializing receipt database:', error);
+            }
+        });
+
+        // Close modal buttons
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeReceiptModal();
+            }
+        });
+
+        // ==================== PASSWORD MODAL FUNCTIONALITY ====================
+        const RECEIPT_PASSWORD = 'admin123';
+
+        function openReceiptPasswordModal() {
+            document.getElementById('passwordModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('passwordInput').focus();
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').textContent = '';
+        }
+
+        function verifyPassword() {
+            const password = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('passwordError');
+
+            if (password === RECEIPT_PASSWORD) {
+                closePasswordModal();
+                openReceiptMakerModal();
+            } else {
+                errorDiv.textContent = 'Invalid password. Please try again.';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        function openReceiptMakerModal() {
+            // Initialize form values when modal opens
+            setDefaultFormValues();
+            document.getElementById('receiptMakerModal').classList.add('show');
+        }
+
+        function closeReceiptMakerModal() {
+            document.getElementById('receiptMakerModal').classList.remove('show');
+        }
+
+        // Close password modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const passwordModal = document.getElementById('passwordModal');
+            if (event.target === passwordModal) {
+                closePasswordModal();
+            }
+        });
+
+        // Close receipt maker modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const receiptMakerModal = document.getElementById('receiptMakerModal');
+            if (event.target === receiptMakerModal) {
+                closeReceiptMakerModal();
+            }
+        });
+
     </script>
 
     <!-- Directions Modal -->
@@ -1366,12 +2531,107 @@
             <div class="modal-body">
                 <span class="close" onclick="closeDirectionsModal()">&times;</span>
                 <div class="location-info">
-                    <h3>JRC Residence Boarding House</h3>
+                    <h3>Chua's Boarding House</h3>
                     <p><strong>Address:</strong> J. Reyes Street, Bitan-o, Sorsogon City</p>
                 </div>
                 <div class="location-image">
                     <img src="location.png" alt="Location Map" style="width: 100%; height: auto; border-radius: 10px;">
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal">
+        <div class="password-modal-content">
+            <h2>Receipt Maker</h2>
+            <p>Enter password to access Receipt Maker</p>
+            <div class="password-input-group">
+                <input type="password" id="passwordInput" placeholder="Enter password" onkeypress="if(event.key==='Enter') verifyPassword()">
+            </div>
+            <div id="passwordError" class="password-error"></div>
+            <div class="password-button-group">
+                <button class="password-submit-btn" onclick="verifyPassword()">Submit</button>
+                <button class="password-cancel-btn" onclick="closePasswordModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Maker Modal -->
+    <div id="receiptMakerModal">
+        <div class="receipt-modal-content">
+            <div class="receipt-modal-header">
+                <h2>Receipt Maker</h2>
+                <button class="receipt-close-btn" onclick="closeReceiptMakerModal()">&times;</button>
+            </div>
+            <div class="receipt-modal-body">
+                <div id="receipt-maker" style="display: block; margin: 0; padding: 0;">
+                    <div class="receipt-container">
+                        <div class="receipt-form-section">
+                            <h3>Create Receipt</h3>
+                            <form id="receiptForm">
+                                <div class="form-group">
+                                    <label for="rentMonth">Rent Month</label>
+                                    <input type="month" id="rentMonth" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rentalAmount">Rental Amount</label>
+                                    <input type="number" id="rentalAmount" placeholder="Enter rental amount" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="electricityBill">Electricity Bill Amount</label>
+                                    <input type="number" id="electricityBill" placeholder="Enter electricity bill amount" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="internetBill">Internet Bill Amount</label>
+                                    <input type="number" id="internetBill" placeholder="Enter internet bill amount" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="waterBill">Water Bill Amount</label>
+                                    <input type="number" id="waterBill" placeholder="Enter water bill amount" step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentDate">Payment Date</label>
+                                    <input type="date" id="paymentDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentMethod">Payment Method</label>
+                                    <select id="paymentMethod" required>
+                                        <option value="">Select payment method</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Bank Transfer">Bank Transfer</option>
+                                        <option value="Check">Check</option>
+                                        <option value="GCash">GCash</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea id="remarks" placeholder="Add any remarks or notes" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="submit-btn">Generate Receipt</button>
+                            </form>
+                        </div>
+
+                        <div class="receipt-preview-section">
+                            <h3>Receipt Preview & History</h3>
+                            <div id="receiptPreview" class="receipt-preview"></div>
+                            <div class="receipt-actions">
+                                <button id="downloadBtn" class="action-btn download-btn" style="display: none;">Download as PDF</button>
+                                <button id="dualCopyBtn" class="action-btn download-btn" style="display: none;">Print Dual Copy (Letter)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="receipt-modal">
+        <div class="receipt-modal-content">
+            <span class="close-receipt-modal" onclick="closeReceiptModal()">&times;</span>
+            <div class="receipt-modal-body">
+                <pre></pre>
             </div>
         </div>
     </div>
