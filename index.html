@@ -1193,7 +1193,7 @@
             position: sticky;
             top: 0;
             background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-            padding: 1.5rem;
+            padding: 0.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1434,7 +1434,7 @@
             padding: 0;
             border-radius: 15px;
             width: 90%;
-            max-width: 65%;
+            max-width: 70%;
             max-height: 95vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -1692,7 +1692,7 @@
                 <li><a href="#rooms">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <li><a href="#" onclick="openReceiptPasswordModal(); return false;">Receipts</a></li>
+                <li><a href="javascript:void(0);" onclick="openReceiptPasswordModal();">Receipts</a></li>
             </ul>
         </nav>
     </header>
@@ -2073,8 +2073,10 @@ ${centerText('BILLING BREAKDOWN')}
 ${formatBillLine('Rental Amount:', rentalAmount.toFixed(2))}
 ${data.electricityBill ? `${formatBillLine('Electricity Bill:', electricityBill.toFixed(2))}
 ` : `${formatBillLine('Electricity Bill:', '0.00')}`}${data.internetBill ? `${formatBillLine('Internet Bill:', internetBill.toFixed(2))}
-` : `${formatBillLine('Internet Bill:', '0.00')}`}${data.waterBill ? `${formatBillLine('Water Bill:', waterBill.toFixed(2))}
-` : `${formatBillLine('Water Bill:', '0.00')}`}${formatBillLine('TOTAL:', totalAmount.toFixed(2))}
+` : `${formatBillLine('Internet Bill:', '0.00')}`}
+${data.waterBill ? `${formatBillLine('Water Bill:', waterBill.toFixed(2))}
+` : `${formatBillLine('Water Bill:', '0.00')}`}
+${formatBillLine('TOTAL:', totalAmount.toFixed(2))}
 
 ${divider}
 ${data.remarks ? `${centerText('REMARKS')}\n${centerText(data.remarks)}\n\n${divider}\n` : ''}
@@ -2109,160 +2111,161 @@ ${centerText('Phone: 09514278564')}
             setDefaultFormValues();
         }
 
-        // Generate receipt on form submit
-        const receiptFormEl = document.getElementById('receiptForm');
-        if (receiptFormEl) {
-            receiptFormEl.addEventListener('submit', async (e) => {
-                e.preventDefault();
+        // Generate receipt preview on button click
+        function generateReceiptPreview() {
+            try {
+                currentReceiptData = {
+                    rentMonth: document.getElementById('rentMonth').value,
+                    rentalAmount: document.getElementById('rentalAmount').value,
+                    electricityBill: document.getElementById('electricityBill').value,
+                    internetBill: document.getElementById('internetBill').value,
+                    waterBill: document.getElementById('waterBill').value,
+                    paymentDate: document.getElementById('paymentDate').value,
+                    paymentMethod: document.getElementById('paymentMethod').value,
+                    remarks: document.getElementById('remarks').value,
+                    timestamp: new Date().toISOString()
+                };
 
-                try {
-                    currentReceiptData = {
-                        rentMonth: document.getElementById('rentMonth').value,
-                        rentalAmount: document.getElementById('rentalAmount').value,
-                        electricityBill: document.getElementById('electricityBill').value,
-                        internetBill: document.getElementById('internetBill').value,
-                        waterBill: document.getElementById('waterBill').value,
-                        paymentDate: document.getElementById('paymentDate').value,
-                        paymentMethod: document.getElementById('paymentMethod').value,
-                        remarks: document.getElementById('remarks').value,
-                        timestamp: new Date().toISOString()
-                    };
+                const receiptText = formatReceipt(currentReceiptData);
+                document.getElementById('receiptPreview').textContent = receiptText;
 
-                    const receiptText = formatReceipt(currentReceiptData);
-                    document.getElementById('receiptPreview').textContent = receiptText;
+                // Show action buttons
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                document.getElementById('dualCopyBtn').style.display = 'inline-block';
 
-                    // Show action buttons
-                    document.getElementById('downloadBtn').style.display = 'inline-block';
-                    document.getElementById('dualCopyBtn').style.display = 'inline-block';
-
-                    showNotification('Receipt generated! Click "Download as PDF"', 'success');
-                } catch (error) {
-                    console.error('Form submission error:', error);
-                    showNotification('Error generating receipt: ' + error.message, 'error');
-                }
-            });
+                showNotification('Receipt generated! Click "Download as PDF"', 'success');
+            } catch (error) {
+                console.error('Receipt generation error:', error);
+                showNotification('Error generating receipt: ' + error.message, 'error');
+            }
         }
 
         // Download receipt as PDF file
-        const downloadBtnEl = document.getElementById('downloadBtn');
-        if (downloadBtnEl) {
-            downloadBtnEl.addEventListener('click', () => {
-                if (!currentReceiptData) {
-                    showNotification('Please generate a receipt first!', 'error');
-                    return;
+        function downloadReceiptPDF() {
+            if (!currentReceiptData) {
+                showNotification('Please generate a receipt first!', 'error');
+                return;
+            }
+
+            const receiptText = formatReceipt(currentReceiptData);
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const filename = `Receipt_${timestamp}.pdf`;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: [80, 150]
+            });
+
+            const lines = receiptText.split('\n');
+            let yPosition = 10;
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const lineHeight = 4;
+            const fontSize = 9;
+
+            doc.setFontSize(fontSize);
+            doc.setFont('courier');
+
+            lines.forEach((line) => {
+                if (yPosition > pageHeight - 10) {
+                    doc.addPage();
+                    yPosition = 10;
                 }
+                // Make TOTAL, amount lines, and business name bold
+                if (line.includes('TOTAL:') || line.includes('₱') || line.includes('CHUA')) {
+                    doc.setFont('courier', 'bold');
+                } else {
+                    doc.setFont('courier', 'normal');
+                }
+                doc.text(line, 40, yPosition, { align: 'center', maxWidth: 70 });
+                yPosition += lineHeight;
+            });
 
-                const receiptText = formatReceipt(currentReceiptData);
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-                const filename = `Receipt_${timestamp}.pdf`;
+            doc.save(filename);
+            showNotification('Receipt downloaded successfully as PDF!', 'success');
+        }
 
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'mm',
-                    format: [80, 200]
-                });
+        // Download dual copy (Boarding House + Tenant) on letter size paper
+        function downloadDualCopy() {
+            if (!currentReceiptData) {
+                showNotification('Please generate a receipt first!', 'error');
+                return;
+            }
 
-                const lines = receiptText.split('\n');
-                let yPosition = 10;
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const lineHeight = 4;
-                const fontSize = 9;
+            const receiptText = formatReceipt(currentReceiptData);
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const filename = `Receipt_DualCopy_${timestamp}.pdf`;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'letter'
+            });
+
+            const lines = receiptText.split('\n');
+            const lineHeight = 4;
+            const fontSize = 9;
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const columnWidth = (pageWidth - 50) / 2; // Two columns with more margins
+            const leftX = 50;
+            const rightX = pageWidth / 2 + 30;
+
+            doc.setFontSize(fontSize);
+            doc.setFont('courier');
+
+            // Function to add receipt copy to a specific column
+            const addReceiptCopy = (xPos, yStart, boxX, boxWidth) => {
+                let yPosition = yStart;
 
                 doc.setFontSize(fontSize);
                 doc.setFont('courier');
 
+                // Add receipt lines - centered in box
                 lines.forEach((line) => {
                     if (yPosition > pageHeight - 10) {
-                        doc.addPage();
-                        yPosition = 10;
+                        return; // Skip if exceeds page height
                     }
-                    doc.text(line, 40, yPosition, { align: 'center', maxWidth: 70 });
+                    // Make TOTAL, amount lines, and business name bold
+                    if (line.includes('TOTAL:') || line.includes('₱') || line.includes('CHUA')) {
+                        doc.setFont('courier', 'bold');
+                    } else {
+                        doc.setFont('courier', 'normal');
+                    }
+                    doc.text(line, boxX + boxWidth / 2, yPosition, { align: 'center' });
                     yPosition += lineHeight;
                 });
 
-                doc.save(filename);
-                showNotification('Receipt downloaded successfully as PDF!', 'success');
+                return yPosition;
+            };
+
+            // Calculate receipt height
+            let receiptHeight = 10;
+            lines.forEach((line) => {
+                receiptHeight += lineHeight;
             });
-        }
 
-        // Download dual copy (Boarding House + Tenant) on letter size paper - landscape
-        const dualCopyBtnEl = document.getElementById('dualCopyBtn');
-        if (dualCopyBtnEl) {
-            dualCopyBtnEl.addEventListener('click', () => {
-                if (!currentReceiptData) {
-                    showNotification('Please generate a receipt first!', 'error');
-                    return;
-                }
+            // Draw outline/border for cutting - narrow like solo receipt
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            const receiptWidth = 80; // Receipt width increased by 5cm
+            const leftReceiptX = leftX + (columnWidth - receiptWidth) / 2;
+            const rightReceiptX = rightX + (columnWidth - receiptWidth) / 2;
 
-                const receiptText = formatReceipt(currentReceiptData);
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-                const filename = `Receipt_DualCopy_${timestamp}.pdf`;
+            // Left receipt border
+            doc.rect(leftReceiptX, 5, receiptWidth, receiptHeight + 10);
 
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({
-                    orientation: 'landscape',
-                    unit: 'mm',
-                    format: 'letter'
-                });
+            // Right receipt border
+            doc.rect(rightReceiptX, 5, receiptWidth, receiptHeight + 10);
 
-                const lines = receiptText.split('\n');
-                const lineHeight = 4;
-                const fontSize = 9;
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const columnWidth = (pageWidth - 50) / 2; // Two columns with more margins
-                const leftX = 50;
-                const rightX = pageWidth / 2 + 30;
+            // Add both copies side-by-side with box positioning
+            addReceiptCopy(leftX, 10, leftReceiptX, receiptWidth);
+            addReceiptCopy(rightX, 10, rightReceiptX, receiptWidth);
 
-                doc.setFontSize(fontSize);
-                doc.setFont('courier');
-
-                // Function to add receipt copy to a specific column
-                const addReceiptCopy = (xPos, yStart, boxX, boxWidth) => {
-                    let yPosition = yStart;
-
-                    doc.setFontSize(fontSize);
-                    doc.setFont('courier');
-
-                    // Add receipt lines - centered in box
-                    lines.forEach((line) => {
-                        if (yPosition > pageHeight - 10) {
-                            return; // Skip if exceeds page height
-                        }
-                        doc.text(line, boxX + boxWidth / 2, yPosition, { align: 'center' });
-                        yPosition += lineHeight;
-                    });
-
-                    return yPosition;
-                };
-
-                // Calculate receipt height
-                let receiptHeight = 10;
-                lines.forEach((line) => {
-                    receiptHeight += lineHeight;
-                });
-
-                // Draw outline/border for cutting - narrow like solo receipt
-                doc.setDrawColor(0);
-                doc.setLineWidth(0.5);
-                const receiptWidth = 80; // Receipt width increased by 5cm
-                const leftReceiptX = leftX + (columnWidth - receiptWidth) / 2;
-                const rightReceiptX = rightX + (columnWidth - receiptWidth) / 2;
-
-                // Left receipt border
-                doc.rect(leftReceiptX, 5, receiptWidth, receiptHeight + 10);
-
-                // Right receipt border
-                doc.rect(rightReceiptX, 5, receiptWidth, receiptHeight + 10);
-
-                // Add both copies side-by-side with box positioning
-                addReceiptCopy(leftX, 10, leftReceiptX, receiptWidth);
-                addReceiptCopy(rightX, 10, rightReceiptX, receiptWidth);
-
-                doc.save(filename);
-                showNotification('Dual copy receipt downloaded successfully as PDF (Landscape)!', 'success');
-            });
+            doc.save(filename);
+            showNotification('Dual copy receipt downloaded successfully as PDF (Landscape)!', 'success');
         }
 
         // Auto-save receipt to database
@@ -2336,7 +2339,7 @@ ${centerText('Phone: 09514278564')}
                         const doc = new jsPDF({
                             orientation: 'portrait',
                             unit: 'mm',
-                            format: [80, 200]
+                            format: [80, 150]
                         });
 
                         const lines = receipt.receiptText.split('\n');
@@ -2352,6 +2355,12 @@ ${centerText('Phone: 09514278564')}
                             if (yPosition > pageHeight - 10) {
                                 doc.addPage();
                                 yPosition = 10;
+                            }
+                            // Make TOTAL, amount lines, and business name bold
+                            if (line.includes('TOTAL:') || line.includes('₱') || line.includes('CHUA')) {
+                                doc.setFont('courier', 'bold');
+                            } else {
+                                doc.setFont('courier', 'normal');
                             }
                             doc.text(line, 40, yPosition, { align: 'center', maxWidth: 70 });
                             yPosition += lineHeight;
@@ -2602,7 +2611,7 @@ ${centerText('Phone: 09514278564')}
                                     <label for="remarks">Remarks</label>
                                     <textarea id="remarks" placeholder="Add any remarks or notes" rows="3"></textarea>
                                 </div>
-                                <button type="submit" class="submit-btn">Generate Receipt</button>
+                                <button type="button" class="submit-btn" onclick="generateReceiptPreview()">Generate Receipt</button>
                             </form>
                         </div>
 
@@ -2610,8 +2619,8 @@ ${centerText('Phone: 09514278564')}
                             <h3>Receipt Preview</h3>
                             <div id="receiptPreview" class="receipt-preview"></div>
                             <div class="receipt-actions">
-                                <button id="downloadBtn" class="action-btn download-btn" style="display: none;">Download as PDF</button>
-                                <button id="dualCopyBtn" class="action-btn download-btn" style="display: none;">Print Dual Copy (Letter)</button>
+                                <button id="downloadBtn" class="action-btn download-btn" style="display: none;" onclick="downloadReceiptPDF()">Download as PDF</button>
+                                <button id="dualCopyBtn" class="action-btn download-btn" style="display: none;" onclick="downloadDualCopy()">Print Dual Copy (Letter)</button>
                             </div>
                         </div>
                     </div>
