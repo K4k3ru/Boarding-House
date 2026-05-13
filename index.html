@@ -2072,21 +2072,15 @@ ${divider}
 ${centerText('BILLING BREAKDOWN')}
 ${formatBillLine('Rental Amount:', rentalAmount.toFixed(2))}
 ${data.electricityBill ? `${formatBillLine('Electricity Bill:', electricityBill.toFixed(2))}
-` : `${formatBillLine('Electricity Bill:', 'FREE')}`}
-${data.internetBill ? `${formatBillLine('Internet Bill:', internetBill.toFixed(2))}
-` : `${formatBillLine('Internet Bill:', 'FREE')}`}
-${data.waterBill ? `${formatBillLine('Water Bill:', waterBill.toFixed(2))}
-` : `${formatBillLine('Water Bill:', 'FREE')}`}
+` : `${formatBillLine('Electricity Bill:', '0.00')}`}${data.internetBill ? `${formatBillLine('Internet Bill:', internetBill.toFixed(2))}
+` : `${formatBillLine('Internet Bill:', '0.00')}`}${data.waterBill ? `${formatBillLine('Water Bill:', waterBill.toFixed(2))}
+` : `${formatBillLine('Water Bill:', '0.00')}`}${formatBillLine('TOTAL:', totalAmount.toFixed(2))}
 
 ${divider}
-
-${centerText('TOTAL AMOUNT DUE')}
-${formatBillLine('TOTAL:', totalAmount.toFixed(2))}
-
-${divider}
-
 ${data.remarks ? `${centerText('REMARKS')}\n${centerText(data.remarks)}\n\n${divider}\n` : ''}
 ${centerText('Thank you for your payment!')}
+
+${divider}
 ${centerText('Chua\'s Boarding House')}
 ${centerText('J. Reyes Street, Bitan-o')}
 ${centerText('Sorsogon City')}
